@@ -7,15 +7,27 @@ COLOR=always
 BROWSER=w3m
 
 display_news () {
+    if [ $COLOR = "never" ]; then
+        printf ":: Checking for Arch Linux news...\n"
+    else    
+        printf "\e[1;34m::\e[0;1m Checking for Arch Linux news...\e[0m\n"
+    fi
+
+    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
+                            tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
+    news=./arch_news.rss
+    wget --quiet https://www.archlinux.org/feeds/news/ -O $news
+    article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
+
     # arg 1 is a list of dates of news items, each on its own line
     local IFS=$'\n'
     # reformat the RSS so that each item is on its own line
-    items=`cat $2 | tr -d '\n' | sed -e 's|<item>|\n<item>|g'`
+    items=`cat $news | tr -d '\n' | sed -e 's|<item>|\n<item>|g'`
     while IFS= read -r d; do
         # get the article's date in seconds since 1970
         art_date=`date -d "$d" '+%s'`
         # if it's new, show it
-        if [[ $art_date -gt $3 ]]; then
+        if [[ $art_date -gt $last_update ]]; then
             URL=`sed -e "/lastBuildDate/d" <(echo "$items") | \
                  grep --color=never $d | \
                  grep -o --color=never "<link>https://.*</link>" | \
@@ -24,8 +36,9 @@ display_news () {
             $BROWSER $URL
         fi
     done <<EOF
-$1
+$article_dates
 EOF
+    rm $news
 }
 
 display_msgs () {
@@ -48,23 +61,13 @@ display_msgs () {
     fi
 }
 
-if [[ $@ = "-Syu" ]]; then
-    if [ $COLOR = "never" ]; then
-        printf ":: Checking for Arch Linux news...\n"
-    else    
-        printf "\e[1;34m::\e[0;1m Checking for Arch Linux news...\e[0m\n"
-    fi
-
-    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
-                        tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
-    news=./arch_news.rss
-    wget --quiet https://www.archlinux.org/feeds/news/ -O $news
-    article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
-    display_news "$article_dates" $news $last_update
-    rm $news
-fi
-
 paclog=`mktemp`
+
+case "$@" in
+    *-Syu*) display_news ;;
+    *) ;;
+esac
+
 pacman --color $COLOR $@ 2>&1 | tee $paclog
 
 display_msgs $paclog
