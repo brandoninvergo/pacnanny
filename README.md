@@ -5,8 +5,8 @@ of Arch Linux and its various derivatives. Unlike other wrappers, this
 script does not aim to make up for any perceived shortcomings in the
 functionality of `pacman`. Instead, it aims to make up for
 shortcomings in the users of `pacman`. The goal of `pacnanny` is to
-make it even harder to mess up a system update with `pacman` by making
-sure that you do not miss anything important.
+make it even harder to mess up with `pacman` by making sure that you
+do not miss anything important.
 
 ## Functionality
 
