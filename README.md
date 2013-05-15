@@ -10,7 +10,7 @@ sure that you do not miss anything important.
 
 ## Functionality
 
-At present, `pacnanny` does precisely three things:
+At present, `pacnanny` does the following:
 
 * Before doing a system update, check for new Arch Linux news items
   since the last update and display them one at a time in the browser
@@ -18,6 +18,9 @@ At present, `pacnanny` does precisely three things:
   option to skip this. Your eyeballs are required to look at the news.
 * Reprint all warnings again together after the update is completed.
 * List new `.pacnew` and `.pacsave` files.
+* Print a warning and ask for confirmation when using the `--force`
+  option.
+* Prompt for a reboot when the kernel has been upgraded.
 
 Simply use the `pacnanny` command in place of `pacman`. So, to do a
 system update, you would do `pacnanny -Syu`.
