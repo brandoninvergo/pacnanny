@@ -1,7 +1,6 @@
 #!/bin/bash
-# Written by Brandon Invergo
+# Written by Brandon Invergo <brandon@invergo.net>
 # This script is in the public domain.
-
 
 # color: always, never, auto
 COLOR=always
