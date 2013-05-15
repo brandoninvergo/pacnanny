@@ -21,6 +21,7 @@
 COLOR=always
 BROWSER=w3m
 WARN_ON_FORCE=true
+NEWS_URL=https://www.archlinux.org/feeds/news/
 
 pacmanbin="${PACMAN:-pacman}"
 [[ -r /etc/pacnanny.conf ]] && source /etc/pacnanny.conf
@@ -35,7 +36,7 @@ display_news () {
     last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
                             tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
     news=./arch_news.rss
-    wget --quiet https://www.archlinux.org/feeds/news/ -O $news
+    wget --quiet $NEWS_URL -O $news
     article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
 
     # arg 1 is a list of dates of news items, each on its own line
