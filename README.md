@@ -4,12 +4,14 @@ This is yet another wrapper script for `pacman`, the package manager
 of Arch Linux and its various derivatives. Unlike other wrappers, this
 script does not aim to make up for any shortcomings in the
 functionality of `pacman`. Instead, it aims to make up for
-shortcomings in the users of `pacman`. `pacnanny` only wraps the
-system update function of `pacman` (`-Syu`).
+shortcomings in the users of `pacman`. The goal of `pacnanny` is to
+make it even harder to mess up a system update with `pacman` by making
+sure that you do not miss anything important.
 
 ## Functionality
 
-At present, `pacnanny` does precisely three things:
+`pacnanny` currently only wraps the system update function of `pacman`
+(`-Syu`). At present, `pacnanny` does precisely three things:
 
 * Check for new Arch Linux news items since the last update and
   display them one at a time in the browser of your choosing. There is
@@ -18,6 +20,9 @@ At present, `pacnanny` does precisely three things:
 * Reprint all warnings again all together after the update is
   completed.
 * List new `.pacnew` and `.pacsave` files.
+
+Basically, just run `pacnanny` instead of `pacman -Syu`. Use `pacman`
+for everything else (installing/removing packages, etc.).
 
 ## Justification
 
@@ -37,4 +42,4 @@ user-error/carelessness.
 
 ## Author
 
-Brandon Invergo <brandon@invergo.net>
+Brandon Invergo - <brandon@invergo.net>
