@@ -10,8 +10,7 @@ sure that you do not miss anything important.
 
 ## Functionality
 
-`pacnanny` currently only wraps the system-update function of `pacman`
-(`-Syu`). At present, `pacnanny` does precisely three things:
+At present, `pacnanny` does precisely three things:
 
 * Check for new Arch Linux news items since the last update and
   display them one at a time in the browser of your choosing. There is
@@ -20,8 +19,8 @@ sure that you do not miss anything important.
 * Reprint all warnings again together after the update is completed.
 * List new `.pacnew` and `.pacsave` files.
 
-Basically, just run `pacnanny` instead of `pacman -Syu`. Use plain old
-`pacman` for everything else (installing/removing packages, etc.).
+Simply use the `pacnanny` command in place of `pacman`. So, to do a
+system update, you would do `pacnanny -Syu`.
 
 ## Justification
 
