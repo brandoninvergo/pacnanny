@@ -29,22 +29,19 @@ EOF
 }
 
 display_msgs () {
-    # Remove annoying gconf/dconf schema deprecation warnings
-    sed -i -e '/warning: Schema/d' $1
-
     warnings=`grep --color=$COLOR warning: $1`
     if [ "x$warnings" != "x" ]; then
         printf "\nWarnings:\n"
         printf "$warnings\n"
     fi
     
-    pacsaves=`grep --color=$COLOR -o "[-0-9_/a-z\.].pacsave" $1`
+    pacsaves=`grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave" $1`
     if [ "x$pacsaves" != "x" ]; then
         printf "\nNew pacsave files:\n"
         printf "$pacsaves\n"
     fi
 
-    pacnews=`grep --color=$COLOR -o "[-0-9_/a-z\.].pacnew" $1`
+    pacnews=`grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew" $1`
     if [ "x$pacnews" != "x" ]; then
         printf "\nNew pacnew files:\n"
         printf "$pacnews\n"
