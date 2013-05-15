@@ -56,32 +56,36 @@ EOF
     rm $news
 }
 
+filter_log () {
+    sed -e 's/\[.*\] //g'
+}
+
 display_warnings () {
-    warnings=`grep --color=$COLOR warning: $1`
+    warnings=`printf "$1\n" | grep --color=$COLOR warning:`
     if [ "x$warnings" != "x" ]; then
         printf "\nWarnings:\n"
-        printf "$warnings\n"
+        printf "$warnings\n" | filter_log
     fi
 }
     
 display_pacsaves () {
-    pacsaves=`grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave" $1`
+    pacsaves=`printf "$1\n" | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave"`
     if [ "x$pacsaves" != "x" ]; then
         printf "\nNew pacsave files:\n"
-        printf "$pacsaves\n"
+        printf "$pacsaves\n" | filter_log
     fi
 }
 
 display_pacnews () {
-    pacnews=`grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew" $1`
+    pacnews=`printf "$1\n" | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew"`
     if [ "x$pacnews" != "x" ]; then
         printf "\nNew pacnew files:\n"
-        printf "$pacnews\n"
+        printf "$pacnews\n" | filter_log
     fi
 }
 
 prompt_reboot () {
-    if [ "x`grep 'upgraded linux' $1`" != "x" ]; then
+    if [ "x`printf "$1\n" | grep 'upgraded linux'`" != "x" ]; then
         printf "\nThe kernel was updated. Reboot now? (y/N)\n"
         read reboot_resp
         if [ "$reboot_resp" = "y" ]; then
@@ -100,16 +104,19 @@ prompt_force () {
     fi
 }
 
-paclog=`mktemp`
-
 case "$@" in
     *-Syu*) display_news ;;
     *--force*) prompt_force ;;
 esac
 
-pacman --color $COLOR $@ 2>&1 | tee $paclog
+run_date=`date '+%Y-%m-%d %H:%M'`
+pacman --color $COLOR $@ 
+# get /var/log/pacman.log from our starting time until the end
+paclog=$(sed -n -e \
+    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,\${/.*/p}" \
+    /var/log/pacman.log)
 
-display_warnings $paclog
-display_pacsaves $paclog
-display_pacnews $paclog
-prompt_reboot $paclog
+display_warnings "$paclog"
+display_pacsaves "$paclog"
+display_pacnews "$paclog"
+prompt_reboot "$paclog"
