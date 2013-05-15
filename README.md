@@ -17,28 +17,29 @@ sure that you do not miss anything important.
   display them one at a time in the browser of your choosing. There is
   no confirmation or option to skip this. Your eyeballs are required
   to look at the news.
-* Reprint all warnings again all together after the update is
-  completed.
+* Reprint all warnings again together after the update is completed.
 * List new `.pacnew` and `.pacsave` files.
 
-Basically, just run `pacnanny` instead of `pacman -Syu`. Use `pacman`
-for everything else (installing/removing packages, etc.).
+Basically, just run `pacnanny` instead of `pacman -Syu`. Use plain old
+`pacman` for everything else (installing/removing packages, etc.).
 
 ## Justification
 
 As careful as I try to be when I run `pacman -Syu`, I still
 occasionally miss things, particularly during large updates that
 produce a lot of text. Important warnings sometimes slip between the
-cracks, causing you to miss an important new `.pacnew` file, for
+cracks, causing me to miss an important new `.pacnew` file, for
 example. As for the news, I do subscribe to the RSS feed but sometimes
 I update the system before opening my newsreader. This forces me to
 see the news first.
 
 ## Contributing
 
-I'm not great at shell scripting, so contributions are welcome as long
-as they stick to the basic idea of only trying to correct/prevent
-user-error/carelessness.
+Are there other places that we can help the user avoid shooting
+himself in the foot? I'm open to ideas. Contributions are welcome as
+long as they stick to the basic idea of only trying to correct/prevent
+user-error/carelessness. Also, I'm not great at shell scripting, so
+please point out any mistakes or places for improvement.
 
 ## Author
 
