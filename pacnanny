@@ -58,8 +58,7 @@ last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
                         tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
 news=./arch_news.rss
 wget --quiet https://www.archlinux.org/feeds/news/ -O $news
-article_dates=`sed -e "/lastBuildDate/d" $news | \
-               grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+"`
+article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+"`
 
 display_news "$article_dates" $news $last_update
 rm $news
