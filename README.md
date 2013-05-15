@@ -10,7 +10,7 @@ sure that you do not miss anything important.
 
 ## Functionality
 
-`pacnanny` currently only wraps the system update function of `pacman`
+`pacnanny` currently only wraps the system-update function of `pacman`
 (`-Syu`). At present, `pacnanny` does precisely three things:
 
 * Check for new Arch Linux news items since the last update and
