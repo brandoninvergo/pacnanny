@@ -24,7 +24,7 @@ At present, `pacnanny` does the following:
 
 ## Usage
 
-`pacnanny` is a thin wrapper around pacman that only looks at the
+`pacnanny` is a thin wrapper around `pacman` that only looks at the
 arguments you pass and at the output of `pacman`. Any arguments are
 just passed to `pacman`, so you can simply use the `pacnanny` command
 in place of `pacman`. So, to do a system update, you would do
