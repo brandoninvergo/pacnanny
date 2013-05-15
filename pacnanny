@@ -20,6 +20,10 @@
 # color: always, never, auto
 COLOR=always
 BROWSER=w3m
+WARN_ON_FORCE=true
+
+pacmanbin="${PACMAN:-pacman}"
+[[ -r /etc/pacnanny.conf ]] && source /etc/pacnanny.conf
 
 display_news () {
     if [ $COLOR = "never" ]; then
@@ -103,12 +107,14 @@ prompt_reboot () {
 }
 
 prompt_force () {
-    printf "You should only use the '--force' option if you absolutely know what\n"
-    printf "you are doing (or if a dev told you to use it).  Are you sure you\n"
-    printf "should be doing this? (Y/n)\n"
-    read force_resp
-    if [ "$force_resp" = "n" ]; then
-        exit 0
+    if [ "$WARN_ON_FORCE" = "true" ]; then
+        printf "You should only use the '--force' option if you absolutely know what\n"
+        printf "you are doing (or if a dev told you to use it).  Are you sure you\n"
+        printf "should be doing this? (Y/n)\n"
+        read force_resp
+        if [ "$force_resp" = "n" ]; then
+            exit 0
+        fi
     fi
 }
 
@@ -118,7 +124,7 @@ case "$@" in
 esac
 
 run_date=`date '+%Y-%m-%d %H:%M'`
-pacman $@ 
+$pacmanbin $@ 
 
 # get /var/log/pacman.log from our starting time until the end
 paclog=$(sed -n -e \
