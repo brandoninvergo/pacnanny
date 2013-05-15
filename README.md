@@ -2,7 +2,7 @@
 
 This is yet another wrapper script for `pacman`, the package manager
 of Arch Linux and its various derivatives. Unlike other wrappers, this
-script does not aim to make up for any shortcomings in the
+script does not aim to make up for any perceived shortcomings in the
 functionality of `pacman`. Instead, it aims to make up for
 shortcomings in the users of `pacman`. The goal of `pacnanny` is to
 make it even harder to mess up a system update with `pacman` by making
