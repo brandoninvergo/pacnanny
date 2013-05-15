@@ -65,6 +65,6 @@ if [[ $@ = "-Syu" ]]; then
 fi
 
 paclog=`mktemp`
-pacman --color $COLOR $@ | tee $paclog
+pacman --color $COLOR $@ 2>&1 | tee $paclog
 
 display_msgs $paclog
