@@ -24,11 +24,11 @@ At present, `pacnanny` does the following:
 
 ## Usage
 
-`pacnanny` is a thin wrapper around `pacman` that only looks at the
-arguments you pass and at the output of `pacman`. Any arguments are
-just passed to `pacman`, so you can simply use the `pacnanny` command
-in place of `pacman`. So, to do a system update, you would do
-`'pacnanny -Syu`.
+`pacnanny` is a thin wrapper that only looks at the arguments you pass
+before passing them on and at the output that `pacman` produces. You
+can simply use the `pacnanny` command in place of `pacman` and use all
+the familiar arguments. So, to do a system update, you would do
+`pacnanny -Syu`.
 
 ## Justification
 
