@@ -75,11 +75,21 @@ prompt_reboot () {
     fi
 }
 
+prompt_force () {
+    printf "You should only use the '--force' option if you absolutely know what\n"
+    printf "you are doing (or if a dev told you to use it).  Are you sure you\n"
+    printf "should be doing this? (Y/n)\n"
+    read force_resp
+    if [ "$force_resp" = "n" ]; then
+        exit 0
+    fi
+}
+
 paclog=`mktemp`
 
 case "$@" in
     *-Syu*) display_news ;;
-    *) ;;
+    *--force*) prompt_force ;;
 esac
 
 pacman --color $COLOR $@ 2>&1 | tee $paclog
