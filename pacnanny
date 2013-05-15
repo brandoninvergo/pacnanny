@@ -63,6 +63,6 @@ display_news "$article_dates" $news $last_update
 rm $news
 
 paclog=`mktemp`
-pacman --color $COLOR -Syu | tee $paclog
+pacman --color $COLOR $@ | tee $paclog
 
 display_msgs $paclog
