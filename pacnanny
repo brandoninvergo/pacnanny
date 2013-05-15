@@ -48,19 +48,21 @@ display_msgs () {
     fi
 }
 
-if [ $COLOR = "never" ]; then
-    printf ":: Checking for Arch Linux news...\n"
-else    
-    printf "\e[1;34m::\e[0;1m Checking for Arch Linux news...\e[0m\n"
-fi
+if [[ $@ = "-Syu" ]]; then
+    if [ $COLOR = "never" ]; then
+        printf ":: Checking for Arch Linux news...\n"
+    else    
+        printf "\e[1;34m::\e[0;1m Checking for Arch Linux news...\e[0m\n"
+    fi
 
-last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
+    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
                         tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
-news=./arch_news.rss
-wget --quiet https://www.archlinux.org/feeds/news/ -O $news
-article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
-display_news "$article_dates" $news $last_update
-rm $news
+    news=./arch_news.rss
+    wget --quiet https://www.archlinux.org/feeds/news/ -O $news
+    article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
+    display_news "$article_dates" $news $last_update
+    rm $news
+fi
 
 paclog=`mktemp`
 pacman --color $COLOR $@ | tee $paclog
