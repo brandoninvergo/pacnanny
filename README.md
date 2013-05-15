@@ -12,10 +12,10 @@ sure that you do not miss anything important.
 
 At present, `pacnanny` does precisely three things:
 
-* Check for new Arch Linux news items since the last update and
-  display them one at a time in the browser of your choosing. There is
-  no confirmation or option to skip this. Your eyeballs are required
-  to look at the news.
+* Before doing a system update, check for new Arch Linux news items
+  since the last update and display them one at a time in the browser
+  of your choosing (w3m by default). There is no confirmation or
+  option to skip this. Your eyeballs are required to look at the news.
 * Reprint all warnings again together after the update is completed.
 * List new `.pacnew` and `.pacsave` files.
 
