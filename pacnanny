@@ -20,16 +20,19 @@
 # color: always, never, auto
 COLOR=always
 BROWSER=w3m
-WARN_ON_FORCE=true
 NEWS_URL=https://www.archlinux.org/feeds/news/
+
+SHOW_NEWS=true
+WARN_ON_FORCE=true
+REPRINT_MESSAGES=true
+REPRINT_WARNINGS=true
+LIST_PACNEWS=true
+LIST_PACSAVES=true
 
 pacmanbin="${PACMAN:-pacman}"
 [[ -r /etc/pacnanny.conf ]] && source /etc/pacnanny.conf
 
-display_news () {
-    if [ $SHOW_NEWS != "true" ]; then
-        return
-    fi
+show_news () {
     if [ $COLOR = "never" ]; then
         printf ":: Checking for Arch Linux news...\n"
     else    
@@ -110,10 +113,7 @@ prompt_reboot () {
     fi
 }
 
-prompt_force () {
-    if [ "$WARN_ON_FORCE" != "true" ]; then
-        return
-    fi
+warn_on_force () {
     printf "You should only use the '--force' option if you absolutely know what\n"
     printf "you are doing (or if a dev told you to use it).  Are you sure you\n"
     printf "should be doing this? (Y/n)\n"
@@ -124,8 +124,11 @@ prompt_force () {
 }
 
 case "$@" in
-    *-Syu*) display_news ;;
-    *--force*) prompt_force ;;
+    *-Syu*) [[ $SHOW_NEWS = "true" ]] && show_news ;;
+esac
+
+case "$@" in
+    *--force*) [[ $WARN_ON_FORCE = "true" ]] && warn_on_force ;;
 esac
 
 run_date=`date '+%Y-%m-%d %H:%M'`
