@@ -131,7 +131,8 @@ $pacmanbin $@
 paclog=$(sed -n -e \
     "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,\${/.*/p}" \
     /var/log/pacman.log)
-display_warnings "$paclog"
-display_pacsaves "$paclog"
-display_pacnews "$paclog"
-prompt_reboot "$paclog"
+[[ $REPRINT_MESSAGES = "true" ]] && display_messages "$paclog"
+[[ $REPRINT_WARNINGS = "true" ]] && display_warnings "$paclog"
+[[ $LIST_PACSAVES = "true" ]] && display_pacsaves "$paclog"
+[[ $LIST_PACNEWS = "true" ]] && display_pacnews "$paclog"
+[[ $PROMPT_REBOOT = "true" ]] && prompt_reboot "$paclog"
