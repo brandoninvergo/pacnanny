@@ -27,6 +27,9 @@ pacmanbin="${PACMAN:-pacman}"
 [[ -r /etc/pacnanny.conf ]] && source /etc/pacnanny.conf
 
 display_news () {
+    if [ $SHOW_NEWS != "true" ]; then
+        return
+    fi
     if [ $COLOR = "never" ]; then
         printf ":: Checking for Arch Linux news...\n"
     else    
@@ -108,14 +111,15 @@ prompt_reboot () {
 }
 
 prompt_force () {
-    if [ "$WARN_ON_FORCE" = "true" ]; then
-        printf "You should only use the '--force' option if you absolutely know what\n"
-        printf "you are doing (or if a dev told you to use it).  Are you sure you\n"
-        printf "should be doing this? (Y/n)\n"
-        read force_resp
-        if [ "$force_resp" = "n" ]; then
-            exit 0
-        fi
+    if [ "$WARN_ON_FORCE" != "true" ]; then
+        return
+    fi
+    printf "You should only use the '--force' option if you absolutely know what\n"
+    printf "you are doing (or if a dev told you to use it).  Are you sure you\n"
+    printf "should be doing this? (Y/n)\n"
+    read force_resp
+    if [ "$force_resp" = "n" ]; then
+        exit 0
     fi
 }
 
