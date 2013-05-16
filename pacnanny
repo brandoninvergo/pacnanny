@@ -47,7 +47,6 @@ show_news () {
     sed -i -e 's|<lastBuildDate>.*</lastBuildDate>||g' $news
     article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
 
-    # arg 1 is a list of dates of news items, each on its own line
     local IFS=$'\n'
     # reformat the RSS so that each item is on its own line
     items=`cat $news | tr -d '\n' | sed -e 's|<item>|\n<item>|g'`
