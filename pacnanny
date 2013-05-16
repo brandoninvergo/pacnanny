@@ -28,6 +28,7 @@ REPRINT_MESSAGES=true
 REPRINT_WARNINGS=true
 LIST_PACNEWS=true
 LIST_PACSAVES=true
+PROMPT_REBOOT=true
 
 pacmanbin="${PACMAN:-pacman}"
 [[ -r /etc/pacnanny.conf ]] && source /etc/pacnanny.conf
