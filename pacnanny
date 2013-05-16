@@ -18,7 +18,7 @@
 
 
 # color: always, never, auto
-COLOR=never
+COLOR=always
 BROWSER=w3m
 NEWS_URL=https://www.archlinux.org/feeds/news/
 
@@ -39,13 +39,11 @@ show_news () {
         printf "\e[1;34m::\e[0;1m Checking for Arch Linux news...\e[0m\n"
     fi
 
-#    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
-#                            tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
-#>>>>>>>>>>>>
-    last_update=1365458400
-#>>>>>>>>>>>>
+    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
+                            tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
     news=./arch_news.rss
     wget --quiet $NEWS_URL -O $news
+    sed -i -e 's|<lastBuildDate>.*</lastBuildDate>||g' $news
     article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
 
     # arg 1 is a list of dates of news items, each on its own line
@@ -134,21 +132,12 @@ case "$@" in
     *--force*) [[ $WARN_ON_FORCE = "true" ]] && warn_on_force ;;
 esac
 
-#run_date=`date '+%Y-%m-%d %H:%M'`
-#$pacmanbin $@ 
-#>>>>>>>>>>>>
-run_date='2013-05-08 11:28'
-end_log='\[2013-05-08 17:29\] \[ALPM-SCRIPTLET\] Note: terminus-font is in \/usr\/share\/fonts\/local\/'
-#>>>>>>>>>>>>
+run_date=`date '+%Y-%m-%d %H:%M'`
+$pacmanbin $@ 
 # get /var/log/pacman.log from our starting time until the end
-#paclog=$(sed -n -e \
-#    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,\${/.*/p}" \
-#    /var/log/pacman.log)
-#>>>>>>>>>>>>
 paclog=$(sed -n -e \
-    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,/$end_log/{/.*/p}" \
+    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,\${/.*/p}" \
     /var/log/pacman.log)
-#>>>>>>>>>>>>
 
 [[ $REPRINT_MESSAGES = "true" ]] && display_messages "$paclog"
 [[ $REPRINT_WARNINGS = "true" ]] && display_warnings "$paclog"
