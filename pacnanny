@@ -18,7 +18,7 @@
 
 
 # color: always, never, auto
-COLOR=always
+COLOR=never
 BROWSER=w3m
 NEWS_URL=https://www.archlinux.org/feeds/news/
 
@@ -39,8 +39,11 @@ show_news () {
         printf "\e[1;34m::\e[0;1m Checking for Arch Linux news...\e[0m\n"
     fi
 
-    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
-                            tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
+#    last_update=$(date -d "`grep 'pacman -Syu' /var/log/pacman.log | \
+#                            tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
+#>>>>>>>>>>>>
+    last_update=1365458400
+#>>>>>>>>>>>>
     news=./arch_news.rss
     wget --quiet $NEWS_URL -O $news
     article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
@@ -88,7 +91,7 @@ display_warnings () {
 }
     
 display_pacsaves () {
-    pacsaves=`printf "$1\n" | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave"`
+    pacsaves=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave"`
     if [ "x$pacsaves" != "x" ]; then
         printf "\nNew pacsave files:\n"
         printf "$pacsaves\n" | filter_log
@@ -96,7 +99,7 @@ display_pacsaves () {
 }
 
 display_pacnews () {
-    pacnews=`printf "$1\n" | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew"`
+    pacnews=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew"`
     if [ "x$pacnews" != "x" ]; then
         printf "\nNew pacnew files:\n"
         printf "$pacnews\n" | filter_log
@@ -131,13 +134,22 @@ case "$@" in
     *--force*) [[ $WARN_ON_FORCE = "true" ]] && warn_on_force ;;
 esac
 
-run_date=`date '+%Y-%m-%d %H:%M'`
-$pacmanbin $@ 
-
+#run_date=`date '+%Y-%m-%d %H:%M'`
+#$pacmanbin $@ 
+#>>>>>>>>>>>>
+run_date='2013-05-08 11:28'
+end_log='\[2013-05-08 17:29\] \[ALPM-SCRIPTLET\] Note: terminus-font is in \/usr\/share\/fonts\/local\/'
+#>>>>>>>>>>>>
 # get /var/log/pacman.log from our starting time until the end
+#paclog=$(sed -n -e \
+#    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,\${/.*/p}" \
+#    /var/log/pacman.log)
+#>>>>>>>>>>>>
 paclog=$(sed -n -e \
-    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,\${/.*/p}" \
+    "/\[$run_date\] \[PACMAN\] Running 'pacman.* -Syu'/,/$end_log/{/.*/p}" \
     /var/log/pacman.log)
+#>>>>>>>>>>>>
+
 [[ $REPRINT_MESSAGES = "true" ]] && display_messages "$paclog"
 [[ $REPRINT_WARNINGS = "true" ]] && display_warnings "$paclog"
 [[ $LIST_PACSAVES = "true" ]] && display_pacsaves "$paclog"
