@@ -16,8 +16,11 @@ At present, `pacnanny` does the following:
   since the last update and display them one at a time in the browser
   of your choosing (w3m by default). There is no confirmation. Your
   eyeballs are required to look at the news.
-* Reprint all warnings again together after the update is completed.
-* List new `.pacnew` and `.pacsave` files.
+* Reprint all scriptlet messages together after an update is
+  completed.
+* Reprint all warnings again together after an update is completed.
+* List new `.pacnew` and `.pacsave` files after an update is
+  completed.
 * Print a warning and ask for confirmation when using the `--force`
   option.
 * Prompt for a reboot when the kernel has been upgraded.
