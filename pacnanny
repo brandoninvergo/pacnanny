@@ -125,7 +125,7 @@ warn_on_force () {
 }
 
 case "$@" in
-    *-Syu*) [[ $SHOW_NEWS = "true" ]] && show_news ;;
+    *-Syu*|*-Suy*|*-Syyu*|*-Syuy*|*-Suyy*) [[ $SHOW_NEWS = "true" ]] && show_news ;;
 esac
 
 case "$@" in
