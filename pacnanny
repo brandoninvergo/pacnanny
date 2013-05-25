@@ -75,7 +75,11 @@ filter_log () {
 display_messages () {
     msgs=`printf "$1\n" | grep ALPM-SCRIPTLET | sed -e '/warning: /d;s/\[.*\] //g'`
     if [ "x$msgs" != "x" ]; then
-        printf "\nMessages:\n"
+        if [ $COLOR = "never" ]; then
+            printf ":: Messages:\n"
+        else    
+            printf "\e[1;34m::\e[0;1m Messages:\e[0m\n"
+        fi
         printf "$msgs\n"
     fi
 }
@@ -83,7 +87,11 @@ display_messages () {
 display_warnings () {
     warnings=`printf "$1\n" | grep --color=$COLOR warning:`
     if [ "x$warnings" != "x" ]; then
-        printf "\nWarnings:\n"
+        if [ $COLOR = "never" ]; then
+            printf ":: Warnings:\n"
+        else    
+            printf "\e[1;34m::\e[0;1m Warnings:\e[0m\n"
+        fi
         printf "$warnings\n" | filter_log
     fi
 }
@@ -91,7 +99,11 @@ display_warnings () {
 display_pacsaves () {
     pacsaves=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave"`
     if [ "x$pacsaves" != "x" ]; then
-        printf "\nNew pacsave files:\n"
+        if [ $COLOR = "never" ]; then
+            printf ":: New pacsave files:\n"
+        else    
+            printf "\e[1;34m::\e[0;1m New pacsave files:\e[0m\n"
+        fi
         printf "$pacsaves\n" | filter_log
     fi
 }
@@ -99,13 +111,22 @@ display_pacsaves () {
 display_pacnews () {
     pacnews=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew"`
     if [ "x$pacnews" != "x" ]; then
-        printf "\nNew pacnew files:\n"
+        if [ $COLOR = "never" ]; then
+            printf ":: New pacnew files:\n"
+        else    
+            printf "\e[1;34m::\e[0;1m New pacnew files:\e[0m\n"
+        fi
         printf "$pacnews\n" | filter_log
     fi
 }
 
 prompt_reboot () {
     if [ "x`printf "$1\n" | grep 'upgraded linux'`" != "x" ]; then
+        if [ $COLOR = "never" ]; then
+            printf ":: The kernel was updated.  Reboot now? (y/N)\n"
+        else    
+            printf "\e[1;34m::\e[0;1m The kernel was updated.  Reboot now? (y/N)\e[0m\n"
+        fi
         printf "\nThe kernel was updated. Reboot now? (y/N)\n"
         read reboot_resp
         if [ "$reboot_resp" = "y" ]; then
