@@ -198,7 +198,7 @@ display_history () {
     else    
         printf "\033[1;34m::\033[0;1m Package history for $1:\033[0m\n"
     fi
-    grep -E "(upgraded|installed|removed) $1 " /var/log/pacman.log | \
+    grep -E "(upgraded|installed|reinstalled|removed) $1 " /var/log/pacman.log | \
         sed -r 's/\[([0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2})\].*(installed|reinstalled|upgraded|removed).*(\(.*\))/\1: \2 \3/g'
 }
 
