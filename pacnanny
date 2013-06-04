@@ -19,7 +19,7 @@
 
 # color: always, never, auto
 COLOR=always
-BROWSER=w3m
+BROWSER='w3m -dump %s'
 NEWS_URL=https://www.archlinux.org/feeds/news/
 
 SHOW_NEWS=true
@@ -60,7 +60,7 @@ show_news () {
                  grep -o --color=never "<link>https://.*</link>" | \
                  sed -e "s|<link>\(.*\)</link>|\1|"`
             printf "Opening news item from $d\n"
-            $BROWSER $URL
+            eval `printf $BROWSER $URL`
         fi
     done <<EOF
 $article_dates
