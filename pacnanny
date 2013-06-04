@@ -217,17 +217,14 @@ EOF
 }
 
 pacnanny_args () {
-    targets=
-    while (( "$#" )); do
-        case "$1" in
-            --history) operation=display_history ;;
-            --log) operation=display_log ;;
-            --help) operation=display_help;;
-            *) targets="$targets $1" ;;
-        esac
-        shift
-    done
-    if [[ "x$targets" == "x" ]]; then
+    operation=
+    case "$1" in
+        --history) operation=display_history ;;
+        --log) operation=display_log ;;
+        --help) operation=display_help;;
+    esac
+    shift
+    if [[ $# -eq 0 ]]; then
         if [[ $operation == display_help ]]; then
             display_help
         else
@@ -235,8 +232,9 @@ pacnanny_args () {
             exit
         fi
     fi
-    for t in $targets; do
-        $operation $t
+    while (( "$#" )); do
+        $operation "$1"
+        shift
     done
     exit
 }
