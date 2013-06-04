@@ -203,7 +203,6 @@ display_history () {
 }
 
 display_help () {
-    shift
     pacman --help $@ | sed 's/pacman/pacnanny/g'
     if [[ $# -eq 0 ]]; then
         cat <<EOF
@@ -218,14 +217,26 @@ EOF
 }
 
 pacnanny_args () {
+    targets=
     while (( "$#" )); do
         case "$1" in
             --history) operation=display_history ;;
             --log) operation=display_log ;;
-            --help) display_help $@;;
-            *) $operation "$1" ;;
+            --help) operation=display_help;;
+            *) targets="$targets $1" ;;
         esac
         shift
+    done
+    if [[ "x$targets" == "x" ]]; then
+        if [[ $operation == display_help ]]; then
+            display_help
+        else
+            echo "Not enough arguments."
+            exit
+        fi
+    fi
+    for t in $targets; do
+        $operation $t
     done
     exit
 }
