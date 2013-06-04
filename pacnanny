@@ -154,7 +154,7 @@ case "$@" in
 esac
 
 run_date=`date '+%Y-%m-%d %H:%M'`
-$pacmanbin $@ 
+$pacmanbin $@
 # get /var/log/pacman.log from our starting time until the end
 paclog=$(sed -n -e \
     "/\[$run_date\] \[PACMAN\] Running 'pacman.*'/,\${/.*/p}" \
