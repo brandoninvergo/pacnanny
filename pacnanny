@@ -146,19 +146,21 @@ warn_on_force () {
 }
 
 get_log_in_date_range () {
+    date1=`echo $1 | cut -d: -f1`
+    date2=`echo $1 | cut -d: -f2`
     # Try to find a reasonable starting point in the file, otherwise
     # this takes forever.
-    if grep -q "`date -d "$1" '+%Y-%m-%d %H:%M'`" /var/log/pacman.log; then
-        start=`date -d "$1" '+%Y-%m-%d %H:%M'`
-    elif grep -q `date -d "$1" '+%Y-%m-%d'` /var/log/pacman.log; then
-        start=`date -d "$1" '+%Y-%m-%d'`
-    elif grep -q `date -d "$1" '+%Y-%m'` /var/log/pacman.log; then
-        start=`date -d "$1" '+%Y-%m'`
+    if grep -q "`date -d "$date1" '+%Y-%m-%d %H:%M'`" /var/log/pacman.log; then
+        start=`date -d "$date1" '+%Y-%m-%d %H:%M'`
+    elif grep -q `date -d "$date1" '+%Y-%m-%d'` /var/log/pacman.log; then
+        start=`date -d "$date1" '+%Y-%m-%d'`
+    elif grep -q `date -d "$date1" '+%Y-%m'` /var/log/pacman.log; then
+        start=`date -d "$date1" '+%Y-%m'`
     else
-        start=`date -d "$1" '+%Y'`
+        start=`date -d "$date1" '+%Y'`
     fi
-    date1=`date -d "$1" '+%s'`
-    date2=`date -d "$2" '+%s'`
+    date1_secs=`date -d "$date1" '+%s'`
+    date2_secs=`date -d "$date2" '+%s'`
     while IFS= read -r line; do
         # get the date listed on the line, if there is one (otherwise
         # continue)
@@ -166,9 +168,10 @@ get_log_in_date_range () {
         if [[ "x$line_date" == "x" ]]; then continue; fi
         line_secs=`date -d "$line_date" '+%s'`
         # check that the date is between the two provided
-        if [[ $line_secs -ge $date1 && $line_secs -le $date2 ]]; then
+        echo $line
+        if [[ $line_secs -ge $date1_secs && $line_secs -le $date2_secs ]]; then
             echo "$line"
-        elif [[ $line_secs -gt $date2 ]]; then
+        elif [[ $line_secs -gt $date2_secs ]]; then
             break
         fi
     done <<EOF
@@ -187,7 +190,7 @@ display_log () {
         printf "\033[1;34m::\033[0;1m Log entries for $1:\033[0m\n"
     fi
     case "$1" in
-        *:*) get_log_in_date_range "`echo "$1" | tr : ' '`" ;;
+        *:*) get_log_in_date_range "$1" ;;
         *) get_log_on_date "$1" ;;
     esac
 }
