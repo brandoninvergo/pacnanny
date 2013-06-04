@@ -193,7 +193,9 @@ esac
 run_date=`date '+%Y-%m-%d %H:%M'`
 $pacmanbin $@
 # get /var/log/pacman.log from our starting time until the end
-paclog=`get_log_on_date "$run_date"`
+paclog=$(sed -n -e \
+    "/\[$run_date\] \[PACMAN\] Running 'pacman.*'/,\${/.*/p}" \
+    /var/log/pacman.log)
 
 [[ $REPRINT_MESSAGES = "true" ]] && display_messages "$paclog"
 [[ $REPRINT_WARNINGS = "true" ]] && display_warnings "$paclog"
