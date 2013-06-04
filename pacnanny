@@ -145,10 +145,12 @@ warn_on_force () {
     fi
 }
 
-get_log_on_date_range () {
+get_log_in_date_range () {
     # Try to find a reasonable starting point in the file, otherwise
     # this takes forever.
-    if grep -q `date -d "$1" '+%Y-%m-%d'` /var/log/pacman.log; then
+    if grep -q "`date -d "$1" '+%Y-%m-%d %H:%M'`" /var/log/pacman.log; then
+        start=`date -d "$1" '+%Y-%m-%d %H:%M'`
+    elif grep -q `date -d "$1" '+%Y-%m-%d'` /var/log/pacman.log; then
         start=`date -d "$1" '+%Y-%m-%d'`
     elif grep -q `date -d "$1" '+%Y-%m'` /var/log/pacman.log; then
         start=`date -d "$1" '+%Y-%m'`
@@ -175,19 +177,19 @@ EOF
 }
 
 get_log_on_date () {
-    case $1 in
-        *:*) get_log_on_date_range `echo $1 | tr : ' '` ;;
-        *) grep --color=never `date -d "$1" '+%Y-%m-%d'` /var/log/pacman.log ;;
-    esac
+    grep --color=never `date -d "$1" '+%Y-%m-%d'` /var/log/pacman.log
 }
 
 display_log () {
     if [ $COLOR = "never" ]; then
-        printf ":: Log entries for $1\n"
+        printf ":: Log entries for $1:\n"
     else    
-        printf "\033[1;34m::\033[0;1m Log entries for $1\033[0m\n"
+        printf "\033[1;34m::\033[0;1m Log entries for $1:\033[0m\n"
     fi
-    get_log_on_date $1
+    case "$1" in
+        *:*) get_log_in_date_range "`echo "$1" | tr : ' '`" ;;
+        *) get_log_on_date "$1" ;;
+    esac
 }
 
 display_history () {
@@ -221,7 +223,7 @@ pacnanny_args () {
             --history) operation=display_history ;;
             --log) operation=display_log ;;
             --help) display_help $@;;
-            *) $operation $1 ;;
+            *) $operation "$1" ;;
         esac
         shift
     done
