@@ -43,7 +43,7 @@ show_news () {
     last_update=$(date -d "`grep 'starting full system upgrade' /var/log/pacman.log | \
                             tail -n1 | grep -o '[-0-9\]* [:0-9]*'`" '+%s')
     news=./arch_news.rss
-    wget --quiet $NEWS_URL -O $news
+    curl --silent $NEWS_URL -o $news
     sed -i -e 's|<lastBuildDate>.*</lastBuildDate>||g' $news
     article_dates=`grep -o -E "[0-9]+ [A-Za-z]+ [0-9]+ [0-9:]+" $news`
 
