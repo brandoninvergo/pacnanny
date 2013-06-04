@@ -146,6 +146,8 @@ warn_on_force () {
 }
 
 get_log_on_date_range () {
+    # Try to find a reasonable starting point in the file, otherwise
+    # this takes forever.
     if grep -q `date -d "$1" '+%Y-%m-%d'` /var/log/pacman.log; then
         start=`date -d "$1" '+%Y-%m-%d'`
     elif grep -q `date -d "$1" '+%Y-%m'` /var/log/pacman.log; then
@@ -156,9 +158,12 @@ get_log_on_date_range () {
     date1=`date -d "$1" '+%s'`
     date2=`date -d "$2" '+%s'`
     while IFS= read -r line; do
+        # get the date listed on the line, if there is one (otherwise
+        # continue)
         line_date=`echo "$line" | grep -o -E "[0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2}"`
         if [[ "x$line_date" == "x" ]]; then continue; fi
         line_secs=`date -d "$line_date" '+%s'`
+        # check that the date is between the two provided
         if [[ $line_secs -ge $date1 && $line_secs -le $date2 ]]; then
             echo "$line"
         elif [[ $line_secs -gt $date2 ]]; then
@@ -195,11 +200,27 @@ display_history () {
         sed -r 's/\[([0-9]{4}\-[0-9]{2}\-[0-9]{2} [0-9]{2}:[0-9]{2})\].*(installed|reinstalled|upgraded|removed).*(\(.*\))/\1: \2 \3/g'
 }
 
+display_help () {
+    shift
+    pacman --help $@ | sed 's/pacman/pacnanny/g'
+    if [[ $# -eq 0 ]]; then
+        cat <<EOF
+
+additional operations for pacnanny:
+    pacnanny --history [package(s)]
+    pacnanny --log     [date(:date)]
+
+EOF
+    fi
+    exit
+}
+
 pacnanny_args () {
     while (( "$#" )); do
         case "$1" in
             --history) operation=display_history ;;
             --log) operation=display_log ;;
+            --help) display_help $@;;
             *) $operation $1 ;;
         esac
         shift
@@ -208,7 +229,7 @@ pacnanny_args () {
 }
 
 case "$@" in
-    *--history*|*--log*) pacnanny_args "$@";;
+    *--history*|*--log*|*--help*) pacnanny_args "$@";;
     *-Syu*|*-Suy*|*-Syyu*|*-Syuy*|*-Suyy*) [[ $SHOW_NEWS = "true" ]] && show_news ;;
 esac
 
