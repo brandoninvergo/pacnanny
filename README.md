@@ -10,7 +10,7 @@ do not miss anything important.
 
 ## Functionality
 
-At present, `pacnanny` does the following:
+`pacnanny` automatically does the following:
 
 * Before doing a system update, check for new Arch Linux news items
   since the last update and display them one at a time in the browser
@@ -26,15 +26,28 @@ At present, `pacnanny` does the following:
 * Prompt for a reboot when the kernel has been upgraded.
 
 All of these functions can be disabled in the configuration file,
-`/etc/pacnanny.conf`, letting you customize the level of strictness.
+`/etc/pacnanny.conf`, letting you customize the level of
+strictness/annoyingness.
+
+`pacnanny` also can perform some useful tasks on its own:
+
+* Display the full history of a package on your system (installation,
+  upgrades, etc.)
+* Display the `pacman` log for a given date or range of dates,
+  including descriptive dates like "yesterday" or "today".
 
 ## Usage
 
-`pacnanny` is a thin wrapper that only looks at the arguments you pass
-before passing them on and at the output that `pacman` produces. You
-can simply use the `pacnanny` command in place of `pacman` and use all
-the familiar arguments. So, to do a system update, you would do
-`pacnanny -Syu`.
+`pacnanny` is a thin wrapper that mostly looks at the arguments you
+pass before passing them on and at the output that `pacman`
+produces. You can simply use the `pacnanny` command in place of
+`pacman` and use all the familiar arguments. So, to do a system
+update, you would do `pacnanny -Syu`.
+
+The extra `pacnanny` functions have their own arguments:
+
+    $ pacnanny --log [date(:date)]
+    $ pacnanny --history [package(s)]
 
 ## Justification
 
@@ -51,26 +64,9 @@ see the news first.
 As it turns out, someone already had the same idea as me (albeit
 several years earlier): [Pacmatic](http://www.kmkeen.com/pacmatic/). I
 was not aware of Pacmatic until after I had already written
-Pacnanny. The two scripts share similar features: they pass all
-options directly on to Pacman, they display the news before system
-upgrades, and they alert you to new `pacnew` files. 
-
-There are some differences. Pacmatic does not display the news
-articles in a browser but rather displays their summaries. It does,
-however, also search for news in the Arch General mailing
-list. Pacmatic automatically launches vimdiff to handle `pacnew`
-files, whereas I felt it was more appropriate to simply inform the
-user of the new files with Pacnanny. Pacmatic also warns you if your
-local repositories are not properly synchronized; Pacnanny does not
-(yet?) do this. Pacnanny has a couple of features that are not present
-in Pacmatic, namely that it prompts you to reboot when the kernel is
-updated and it warns you if you use the `--force` option. Finally, and
-this is very superficial, Pacnanny's printed output is in the same
-style as Pacman 4, whereas Pacmatic's output does not.
-
-I may eventually implement some of Pacmatic's other features in
-Pacnanny. I do not wish to imply in any way that I set out to produce
-a better script; I simply did not know about the competition.
+Pacnanny. The two scripts share similar features but they also have
+their differences.  I recommend trying both and choosing the one that
+better suits your needs.
 
 ## Contributing
 
