@@ -152,8 +152,10 @@ get_log_on_date_range () {
         start=`date -d "$1" '+%Y-%m-%d'`
     elif grep -q `date -d "$1" '+%Y-%m'` /var/log/pacman.log; then
         start=`date -d "$1" '+%Y-%m'`
-    else
+    elif grep -q `date -d "$1" '+%Y'` /var/log/pacman.log; then
         start=`date -d "$1" '+%Y'`
+    else
+        start='.*'
     fi
     date1=`date -d "$1" '+%s'`
     date2=`date -d "$2" '+%s'`
