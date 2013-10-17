@@ -19,7 +19,7 @@
 
 # color: always, never, auto
 COLOR=always
-BROWSER='w3m -dump %s'
+BROWSER="w3m -dump %s  | sed '1,9d;11s/\(.*\)/$(tput bold)\\\1$(tput sgr0)/;12d;/Copyright (C)/,\${/.*/d}'"
 NEWS_URL=https://www.archlinux.org/feeds/news/
 
 SHOW_NEWS=true
@@ -56,11 +56,11 @@ show_news () {
         # if it's new, show it
         if [[ $art_date -gt $last_update ]]; then
             URL=`sed -e "/lastBuildDate/d" <(echo "$items") | \
-                 grep --color=never $d | \
-                 grep -o --color=never "<link>https://.*</link>" | \
+                 grep --color=never "$d" | \
+                 grep -E -o --color=never "<link>https?://.*</link>" | \
                  sed -e "s|<link>\(.*\)</link>|\1|"`
             printf "Opening news item from $d\n"
-            eval `printf $BROWSER $URL`
+            eval $(printf "$BROWSER" $URL)
         fi
     done <<EOF
 $article_dates
