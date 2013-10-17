@@ -150,14 +150,16 @@ get_log_in_date_range () {
     date2=`echo $1 | cut -d: -f2`
     # Try to find a reasonable starting point in the file, otherwise
     # this takes forever.
-    if grep -q "`date -d "$date1" '+%Y-%m-%d %H:%M'`" /var/log/pacman.log; then
+    if grep -q `date -d "$date1" '+%Y-%m-%d %H:%M'` /var/log/pacman.log; then
         start=`date -d "$date1" '+%Y-%m-%d %H:%M'`
     elif grep -q `date -d "$date1" '+%Y-%m-%d'` /var/log/pacman.log; then
         start=`date -d "$date1" '+%Y-%m-%d'`
     elif grep -q `date -d "$date1" '+%Y-%m'` /var/log/pacman.log; then
         start=`date -d "$date1" '+%Y-%m'`
-    else
+    elif grep -q `date -d "$date1" '+%Y'` /var/log/pacman.log; then
         start=`date -d "$date1" '+%Y'`
+    else
+        start='.*'
     fi
     date1_secs=`date -d "$date1" '+%s'`
     date2_secs=`date -d "$date2" '+%s'`
