@@ -1,8 +1,8 @@
 #!/bin/bash
 #       pacnanny
-#       
+#
 #       Copyright © 2013 Brandon Invergo <brandon@invergo.net>
-#       
+#
 #       pacnanny is free software: you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
 #       the Free Software Foundation, either version 3 of the License, or
@@ -36,7 +36,7 @@ pacmanbin="${PACMAN:-pacman}"
 show_news () {
     if [ $COLOR = "never" ]; then
         printf ":: Checking for Arch Linux news...\n"
-    else    
+    else
         printf "\033[1;34m::\033[0;1m Checking for Arch Linux news...\033[0m\n"
     fi
 
@@ -77,7 +77,7 @@ display_messages () {
     if [ "x$msgs" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: Messages:\n"
-        else    
+        else
             printf "\033[1;34m::\033[0;1m Messages:\033[0m\n"
         fi
         printf "$msgs\n"
@@ -89,19 +89,19 @@ display_warnings () {
     if [ "x$warnings" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: Warnings:\n"
-        else    
+        else
             printf "\033[1;34m::\033[0;1m Warnings:\033[0m\n"
         fi
         printf "$warnings\n" | filter_log
     fi
 }
-    
+
 display_pacsaves () {
     pacsaves=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave"`
     if [ "x$pacsaves" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: New pacsave files:\n"
-        else    
+        else
             printf "\033[1;34m::\033[0;1m New pacsave files:\033[0m\n"
         fi
         printf "$pacsaves\n" | filter_log
@@ -113,7 +113,7 @@ display_pacnews () {
     if [ "x$pacnews" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: New pacnew files:\n"
-        else    
+        else
             printf "\033[1;34m::\033[0;1m New pacnew files:\033[0m\n"
         fi
         printf "$pacnews\n" | filter_log
@@ -121,17 +121,22 @@ display_pacnews () {
 }
 
 prompt_reboot () {
-    if [ "x`printf "$1\n" | grep 'upgraded linux'`" != "x" ]; then
+    if $(grep -qP 'upgraded linux(?!-firmware)' <<EOF
+$1
+EOF
+        ); then
         if [ $COLOR = "never" ]; then
             printf ":: The kernel was updated.  Reboot now? (y/N)\n"
-        else    
+        else
             printf "\033[1;34m::\033[0;1m The kernel was updated.  Reboot now? (y/N)\033[0m\n"
         fi
         printf "\nThe kernel was updated. Reboot now? (y/N)\n"
         read reboot_resp
         if [ "$reboot_resp" = "y" ]; then
             systemctl reboot
-        fi
+        fi<<EOF
+
+EOF
     fi
 }
 
@@ -188,7 +193,7 @@ get_log_on_date () {
 display_log () {
     if [ $COLOR = "never" ]; then
         printf ":: Log entries for $1:\n"
-    else    
+    else
         printf "\033[1;34m::\033[0;1m Log entries for $1:\033[0m\n"
     fi
     case "$1" in
@@ -200,7 +205,7 @@ display_log () {
 display_history () {
     if [ $COLOR = "never" ]; then
         printf ":: Package history for $1:\n"
-    else    
+    else
         printf "\033[1;34m::\033[0;1m Package history for $1:\033[0m\n"
     fi
     grep -E "(upgraded|installed|reinstalled|removed) $1 " /var/log/pacman.log | \
@@ -255,7 +260,7 @@ esac
 
 run_date=`date '+%Y-%m-%d %H:%M'`
 $pacmanbin $@
-# get /var/log/pacman.log from our starting time until the end
+get /var/log/pacman.log from our starting time until the end
 paclog=$(sed -n -e \
     "/\[$run_date\] \[PACMAN\] Running 'pacman.*'/,\${/.*/p}" \
     /var/log/pacman.log)
