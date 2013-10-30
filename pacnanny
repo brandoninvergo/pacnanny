@@ -97,7 +97,14 @@ display_warnings () {
 }
 
 display_pacsaves () {
-    pacsaves=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave"`
+    warnings=$(grep --color=never warning: <<EOF
+$1
+EOF
+)
+    pacsaves=$(grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacsave" <<EOF
+$warnings
+EOF
+)
     if [ "x$pacsaves" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: New pacsave files:\n"
@@ -109,7 +116,14 @@ display_pacsaves () {
 }
 
 display_pacnews () {
-    pacnews=`printf "$1\n" | grep --color=never warning: | grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew"`
+    warnings=$(grep --color=never warning: <<EOF
+$1
+EOF
+)
+    pacnews=$(grep --color=$COLOR -o "[-0-9_/a-z\.]*.pacnew" <<EOF
+$warnings
+EOF
+)
     if [ "x$pacnews" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: New pacnew files:\n"
