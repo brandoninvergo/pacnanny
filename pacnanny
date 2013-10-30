@@ -284,7 +284,7 @@ esac
 
 run_date=`date '+%Y-%m-%d %H:%M'`
 $pacmanbin $@
-get /var/log/pacman.log from our starting time until the end
+# get /var/log/pacman.log from our starting time until the end
 paclog=$(sed -n -e \
     "/\[$run_date\] \[PACMAN\] Running 'pacman.*'/,\${/.*/p}" \
     /var/log/pacman.log)
