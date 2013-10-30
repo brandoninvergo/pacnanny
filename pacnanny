@@ -73,19 +73,29 @@ filter_log () {
 }
 
 display_messages () {
-    msgs=`printf "$1\n" | grep ALPM-SCRIPTLET | sed -e '/warning: /d;s/\[.*\] //g'`
-    if [ "x$msgs" != "x" ]; then
+    msgs=$(grep ALPM-SCRIPTLET <<EOF
+$1
+EOF
+)
+    msgs_filtered=$(sed -e '/warning: /d;s/\[.*\] //g' <<EOF
+$msgs
+EOF
+)
+    if [ "x$msgs_filtered" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: Messages:\n"
         else
             printf "\033[1;34m::\033[0;1m Messages:\033[0m\n"
         fi
-        printf "$msgs\n"
+        printf "$msgs_filtered\n"
     fi
 }
 
 display_warnings () {
-    warnings=`printf "$1\n" | grep --color=$COLOR warning:`
+    warnings=$(grep --color=$COLOR warning: <<EOF
+$1
+EOF
+)
     if [ "x$warnings" != "x" ]; then
         if [ $COLOR = "never" ]; then
             printf ":: Warnings:\n"
